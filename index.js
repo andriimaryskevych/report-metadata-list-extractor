@@ -18,11 +18,11 @@ exports.handler = async (event, context) => {
         console.log(`Mapping ${response.length} values`);
 
         const mappedValues = JSON.stringify(response.map(item => ({
-                id: item.id,
-                creationDate: item.CreatedDate,
-                dateFrom: item.ReportFrom,
-                dateTo: item.ReportTo
-            })));
+            id: item.id,
+            creationDate: item.CreatedDate,
+            dateFrom: item.ReportFrom,
+            dateTo: item.ReportTo
+        })));
 
         console.log('Response', mappedValues);
 
