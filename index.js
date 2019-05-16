@@ -26,6 +26,8 @@ exports.handler = async (event, context) => {
 
         console.log('Response', mappedValues);
 
+        sql.close();
+
         return mappedValues;
     } catch (error) {
         console.log('Error occured', error);
