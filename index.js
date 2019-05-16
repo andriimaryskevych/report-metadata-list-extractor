@@ -1,28 +1,35 @@
-exports.handler = (event, context, callback) => {
+var sql = require("mssql");
+
+var config = {
+    user: 'nodejsteam2',
+    password: 'HelloWorld!',
+    server: 'reports-db.cfgf8dz2qitj.eu-central-1.rds.amazonaws.com',
+    database: 'dbo.reports-db'
+};
+
+exports.handler = async (event, context) => {
     try {
-        callback(null, [
-            {
-                id: 1,
-                createdAt: 1557989832,
-                dateFrom: 1557989832,
-                dateTo: 1557989832
-            },
-            {
-                id: 2,
-                createdAt: 1557989832,
-                dateFrom: 1557989832,
-                dateTo: 1557989832
-            },
-            {
-                id: 3,
-                createdAt: 1557989832,
-                dateFrom: 1557989832,
-                dateTo: 1557989832
-            }
-        ]);
+        console.log('Getting list of all reports');
+
+        let query = `SELECT * FROM ReportsMetadata`;
+        let pool = await sql.connect(config);
+        let response = (await pool.request().query(query)).recordset;
+
+        console.log(`Mapping ${response.length} values`);
+
+        const mappedValues = JSON.stringify(response.map(item => ({
+                id: item.id,
+                creationDate: item.CreatedDate,
+                dateFrom: item.ReportFrom,
+                dateTo: item.ReportTo
+            })));
+
+        console.log('Response', mappedValues);
+
+        return mappedValues;
     } catch (error) {
         console.log('Error occured', error);
 
-        callback(error, null);
+        return error;
     }
 };
